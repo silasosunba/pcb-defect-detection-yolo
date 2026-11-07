@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DATABASE_URL: "${DATABASE_URL:?Set DATABASE_URL to your Neon PostgreSQL connection string in .env}"
+      PCB_DATA_DIR: /app/data
+      PCB_MODEL_PATH: /app/models/best.pt
+      PCB_MODEL_MANIFEST: /app/models/model-manifest.json
+      PCB_DEVICE: cpu
+      PCB_ALLOWED_ORIGINS: "${PCB_ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}"
+      PCB_SECURE_COOKIES: "${PCB_SECURE_COOKIES:-false}"
+    volumes:
+      - pcb-data:/app/data
+      - ./models:/app/models:ro
+    restart: unless-stopped
+volumes:
+  pcb-data:
